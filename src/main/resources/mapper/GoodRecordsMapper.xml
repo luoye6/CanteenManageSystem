@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztyedu.mybatisplus.mapper.GoodRecordsMapper">
+
+    <resultMap id="BaseResultMap" type="com.ztyedu.mybatisplus.pojo.GoodRecords">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="goodName" column="good_name" jdbcType="VARCHAR"/>
+            <result property="goodPrice" column="good_price" jdbcType="DECIMAL"/>
+            <result property="goodNumber" column="good_number" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,good_name,good_price,
+        good_number,user_id,user_name,
+        create_time,update_time
+    </sql>
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_good_records
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+    </select>
+    <insert id="insertAll">
+        insert into t_good_records
+        (id, good_name, good_price,
+         good_number, user_id, user_name,
+         create_time, update_time)
+        values (#{id,jdbcType=NUMERIC}, #{goodName,jdbcType=VARCHAR}, #{goodPrice,jdbcType=DECIMAL},
+                #{goodNumber,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{userName,jdbcType=VARCHAR},
+                #{createTime}, #{updateTime})
+
+    </insert>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_good_records
+    </select>
+</mapper>

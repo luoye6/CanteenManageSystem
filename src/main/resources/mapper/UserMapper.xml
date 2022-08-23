@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztyedu.mybatisplus.mapper.UserMapper">
+    <!--    自定义resultMap映射-->
+    <resultMap id="BaseResultMap" type="com.ztyedu.mybatisplus.pojo.User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="balance" column="balance" jdbcType="DECIMAL"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--    公共代码SQL抽取-->
+    <sql id="Base_Column_List">
+        id
+        ,user_name,user_password,
+        user_id,balance,status,
+        create_time,update_time,is_deleted
+    </sql>
+    <!--    根据用户账号和密码进行登录-->
+    <select id="selectByUserIdAndUserPassword" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+        AND user_password = #{userPassword,jdbcType=VARCHAR}
+    </select>
+    <!--    根据用户账号进行查询 判断账号是否重复-->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+    </select>
+    <!--    用户注册-->
+    <insert id="insertAll">
+        insert into t_user
+        (id, user_name, user_password,
+         user_id, balance, status,
+         create_time, update_time, is_deleted)
+        values (#{id,jdbcType=NUMERIC}, #{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+                #{userId,jdbcType=NUMERIC}, #{balance,jdbcType=DECIMAL}, #{status,jdbcType=NUMERIC},
+                #{createTime}, #{updateTime}, #{isDeleted,jdbcType=NUMERIC})
+
+    </insert>
+    <!--    根据用户账号和密码进行注销用户的操作-->
+    <delete id="deleteByUserIdAndUserPassword">
+        UPDATE t_user
+        SET is_deleted = 1
+        where user_id = #{userId,jdbcType=NUMERIC}
+          AND user_password = #{userPassword,jdbcType=VARCHAR}
+    </delete>
+
+    <!--    根据用户账号进行充值操作-->
+    <update id="updateBalanceByUserId">
+        update t_user
+        set balance = #{balance}
+        where user_id = #{userId,jdbcType=NUMERIC}
+    </update>
+
+</mapper>
